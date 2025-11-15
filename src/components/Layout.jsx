@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Navigation from './Navigation';
 import Footer from '../pages/Footer';
+import WhatsAppButton from './UI/WhatsAppButton';
+import ScrollToTopButton from './UI/ScrollToTopButton';
 
 const Layout = ({ children }) => {
   const [currentPage, setCurrentPage] = useState('home');
@@ -33,7 +35,7 @@ const Layout = ({ children }) => {
   };
 
   return (
-    <div className=" text-white">
+    <div className=" text-white" style={{ cursor: "url('/cursor.png'), auto" }}  >
       <Navigation 
         currentPage={currentPage}
         navigateTo={navigateTo}
@@ -41,10 +43,19 @@ const Layout = ({ children }) => {
         setIsMenuOpen={setIsMenuOpen}
         scrollY={scrollY}
       />
-      <main className="pt-20 bg-black">
+      <main className="pt-20 bg-black" >
         {children}
       </main>
       <Footer navigateTo={navigateTo} />
+      
+      {/* Scroll to Top Button */}
+      <ScrollToTopButton />
+      
+      {/* WhatsApp Floating Button */}
+      <WhatsAppButton 
+        phoneNumber="923188973096" 
+        message="Hello! I'd like to know more about your services."
+      />
     </div>
   );
 };

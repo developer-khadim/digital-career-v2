@@ -2,16 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  scroll-behavior: smooth;
+}
+
+body {
+  cursor: url('/dc.png'), auto !important;
+}
+
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  /* Color variables */
-  --primary: #a3e635; /* lime-500 */
-  --primary-high: #65A30D;
-  --secondary: #000000; /* black */
-  --third: #1e40af; /* blue-800 */
   
 }
 

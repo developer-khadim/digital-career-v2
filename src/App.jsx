@@ -8,6 +8,8 @@ import Services from "./pages/Services";
 import Projects from "./pages/Projects";
 import Careers from "./pages/Careers";
 import ClickSpark from "./components/UI/ClickSpark";
+import LandingPage from "./pages/LandingPage";
+
 
 const App = () => {
   return (
@@ -18,10 +20,10 @@ const App = () => {
       sparkCount={8}
       duration={400}
     >
-      <Layout>
+      <Layout >
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/services" element={<Services />} />
         <Route path="/projects" element={<Projects />} />

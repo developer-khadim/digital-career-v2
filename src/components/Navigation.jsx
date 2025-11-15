@@ -1,29 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import RadialGlowShape from "./UI/RadialGlowShape";
 
 const Navigation = ({ scrollY }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
   const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
   const location = useLocation();
 
-  // Initialize theme from localStorage
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
 
-    if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
-      setDarkMode(true);
-      document.documentElement.classList.add("dark");
-    } else {
-      setDarkMode(false);
-      document.documentElement.classList.remove("dark");
-    }
-  }, []);
 
   // Smooth page load animation
   useEffect(() => {
@@ -36,18 +22,33 @@ const Navigation = ({ scrollY }) => {
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
-  // Toggle dark mode
-  const toggleDarkMode = () => {
-    if (darkMode) {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-      setDarkMode(false);
-    } else {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-      setDarkMode(true);
-    }
-  };
+  // Detect active section based on scroll position
+  useEffect(() => {
+    if (location.pathname !== "/") return;
+
+    const handleScroll = () => {
+      const sections = ["home", "services", "projects", "careers", "about", "contact"];
+      const scrollPosition = window.scrollY + 100; // Offset for navbar height
+
+      for (const sectionId of sections) {
+        const section = document.getElementById(sectionId);
+        if (section) {
+          const { offsetTop, offsetHeight } = section;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveSection(sectionId);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Check on mount
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [location.pathname]);
+
+
 
   // Prevent body scroll when menu is open
   useEffect(() => {
@@ -61,16 +62,35 @@ const Navigation = ({ scrollY }) => {
     };
   }, [isMenuOpen]);
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (link) => {
+    // If on home page, check scroll-based active section
+    if (location.pathname === "/") {
+      return activeSection === link.sectionId;
+    }
+    // Otherwise, check route-based active state
+    return location.pathname === link.path;
+  };
 
   const navLinks = [
-    { path: "/", label: "Home" },
-    { path: "/about", label: "About" },
-    { path: "/services", label: "Services" },
-    { path: "/projects", label: "Projects" },
-    { path: "/careers", label: "Careers" },
-    { path: "/contact", label: "Contact" },
+    { path: "/", label: "Home", sectionId: "home" },
+    { path: "/about", label: "About", sectionId: "about" },
+    { path: "/services", label: "Services", sectionId: "services" },
+    { path: "/projects", label: "Projects", sectionId: "projects" },
+    { path: "/careers", label: "Careers", sectionId: "careers" },
+    { path: "/contact", label: "Contact", sectionId: "contact" },
   ];
+
+  // Handle navigation - scroll to section if on home page, otherwise navigate
+  const handleNavClick = (e, link) => {
+    if (location.pathname === "/" && link.sectionId) {
+      e.preventDefault();
+      const section = document.getElementById(link.sectionId);
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth", block: "start" });
+        setIsMenuOpen(false);
+      }
+    }
+  };
 
   const shouldShowBlackBackground = () => {
     if (location.pathname !== "/") {
@@ -118,8 +138,9 @@ const Navigation = ({ scrollY }) => {
                 <Link
                   key={link.path}
                   to={link.path}
+                  onClick={(e) => handleNavClick(e, link)}
                   className={`text-sm font-medium transition-all duration-500 hover:text-lime-400 relative group ${
-                    isActive(link.path) ? "text-lime-400" : "text-white"
+                    isActive(link) ? "text-lime-400" : "text-white"
                   } ${
                     isPageLoaded
                       ? "translate-y-0 opacity-100"
@@ -132,7 +153,7 @@ const Navigation = ({ scrollY }) => {
                   {link.label}
                   <span
                     className={`absolute -bottom-1 left-0 h-0.5 bg-lime-400 transition-all duration-300 ${
-                      isActive(link.path) ? "w-full" : "w-0 group-hover:w-full"
+                      isActive(link) ? "w-full" : "w-0 group-hover:w-full"
                     }`}
                   />
                 </Link>
@@ -167,14 +188,15 @@ const Navigation = ({ scrollY }) => {
               </Link>
             </div>
 
-            {/* Right Nav Links + Theme Toggle */}
+            {/* Right Nav Links */}
             <div className="hidden lg:flex items-center gap-12">
               {navLinks.slice(3).map((link, index) => (
                 <Link
                   key={link.path}
                   to={link.path}
+                  onClick={(e) => handleNavClick(e, link)}
                   className={`text-sm font-medium transition-all duration-500 hover:text-lime-400 relative group ${
-                    isActive(link.path) ? "text-lime-400" : "text-white"
+                    isActive(link) ? "text-lime-400" : "text-white"
                   } ${
                     isPageLoaded
                       ? "translate-y-0 opacity-100"
@@ -187,64 +209,15 @@ const Navigation = ({ scrollY }) => {
                   {link.label}
                   <span
                     className={`absolute -bottom-1 left-0 h-0.5 bg-lime-400 transition-all duration-300 ${
-                      isActive(link.path) ? "w-full" : "w-0 group-hover:w-full"
+                      isActive(link) ? "w-full" : "w-0 group-hover:w-full"
                     }`}
                   />
                 </Link>
               ))}
-
-              {/* Dark Mode Toggle - Desktop */}
-              <button
-                onClick={toggleDarkMode}
-                className={`relative w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all duration-500 hover:scale-110 group ${
-                  isPageLoaded
-                    ? "translate-y-0 opacity-100"
-                    : "translate-y-4 opacity-0"
-                }`}
-                style={{ transitionDelay: "700ms" }}
-                aria-label="Toggle theme"
-              >
-                <Sun
-                  className={`w-5 h-5 text-lime-400 absolute transition-all duration-500 ${
-                    darkMode
-                      ? "rotate-90 scale-0 opacity-0"
-                      : "rotate-0 scale-100 opacity-100"
-                  }`}
-                />
-                <Moon
-                  className={`w-5 h-5 text-lime-400 absolute transition-all duration-500 ${
-                    darkMode
-                      ? "rotate-0 scale-100 opacity-100"
-                      : "-rotate-90 scale-0 opacity-0"
-                  }`}
-                />
-              </button>
             </div>
 
-            {/* Mobile Menu Button & Theme Toggle */}
-            <div className="lg:hidden flex items-center gap-4">
-              {/* Dark Mode Toggle - Mobile */}
-              <button
-                onClick={toggleDarkMode}
-                className="relative w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all duration-300"
-                aria-label="Toggle theme"
-              >
-                <Sun
-                  className={`w-5 h-5 text-lime-400 absolute transition-all duration-500 ${
-                    darkMode
-                      ? "rotate-90 scale-0 opacity-0"
-                      : "rotate-0 scale-100 opacity-100"
-                  }`}
-                />
-                <Moon
-                  className={`w-5 h-5 text-lime-400 absolute transition-all duration-500 ${
-                    darkMode
-                      ? "rotate-0 scale-100 opacity-100"
-                      : "-rotate-90 scale-0 opacity-0"
-                  }`}
-                />
-              </button>
-
+            {/* Mobile Menu Button */}
+            <div className="lg:hidden flex items-center">
               {/* Hamburger Menu */}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -286,9 +259,9 @@ const Navigation = ({ scrollY }) => {
               <Link
                 key={link.path}
                 to={link.path}
-                onClick={() => setIsMenuOpen(false)}
+                onClick={(e) => handleNavClick(e, link)}
                 className={`text-3xl md:text-4xl font-bold transition-all duration-500 hover:text-lime-400 hover:scale-110 relative group ${
-                  isActive(link.path) ? "text-lime-400" : "text-white"
+                  isActive(link) ? "text-lime-400" : "text-white"
                 }`}
                 style={{
                   transitionDelay: isMenuOpen
@@ -304,7 +277,7 @@ const Navigation = ({ scrollY }) => {
                 {/* Animated underline */}
                 <span
                   className={`absolute -bottom-2 left-0 h-1 bg-lime-400 rounded-full transition-all duration-300 ${
-                    isActive(link.path) ? "w-full" : "w-0 group-hover:w-full"
+                    isActive(link) ? "w-full" : "w-0 group-hover:w-full"
                   }`}
                 />
               </Link>

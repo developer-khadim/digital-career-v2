@@ -3,13 +3,14 @@ import { ArrowRight, CheckCircle, Sparkles } from 'lucide-react'
 import { projectData, processSteps, faqs } from '../Data/data'
 import ProcessStep from '../components/Services/ProcessStep'
 import FaqItem from '../components/Services/FaqItem'
+import { Link } from 'react-router-dom'
 
 const Services = () => {
 
   return (
     <div className="min-h-screen bg-secondary text-white">
       {/* Hero Section */}
-      <section className="relative py-16 sm:py-20 md:py-24 lg:py-32 px-4 sm:px-6 overflow-hidden">
+      <section className="relative pt-2 sm:pt-20 md:pt-24 lg:pt-32 px-4 sm:px-6 overflow-hidden">
         {/* Background Glow Effects */}
         <div className="absolute top-0 left-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-primary/20 rounded-full blur-3xl opacity-50"></div>
         <div className="absolute bottom-0 right-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-primary/10 rounded-full blur-3xl opacity-30"></div>
@@ -30,15 +31,7 @@ const Services = () => {
               We offer comprehensive digital solutions tailored to your needs. From cutting-edge development to creative design, we've got you covered.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center pt-4 sm:pt-6">
-              <button className="px-6 sm:px-8 py-3 sm:py-4 bg-primary text-secondary rounded-lg sm:rounded-xl font-bold hover:bg-primary/90 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-primary/50 flex items-center justify-center gap-2">
-                Get Started
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
-              </button>
-              <button className="px-6 sm:px-8 py-3 sm:py-4 bg-white/10 backdrop-blur-sm text-white rounded-lg sm:rounded-xl font-semibold hover:bg-white/20 transition-all duration-300 border border-white/20">
-                View Pricing
-              </button>
-            </div>
+           
           </div>
         </div>
       </section>
@@ -46,14 +39,14 @@ const Services = () => {
       {/* Services Grid Section */}
       <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6">
         <div className="container mx-auto max-w-8xl">
-          <div className="text-center mb-10 sm:mb-12 md:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">
-              What We <span className="text-primary">Offer</span>
-            </h2>
-            <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto">
-              Explore our range of professional services designed to help you succeed
-            </p>
-          </div>
+            {/* <div className="text-center mb-10 sm:mb-12 md:mb-16">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">
+                What We <span className="text-primary">Offer</span>
+              </h2>
+              <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto">
+                Explore our range of professional services designed to help you succeed
+              </p>
+            </div> */}
 
           {/* Services Cards Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
@@ -75,14 +68,14 @@ const Services = () => {
                   {service.title}
                 </h3>
                 
-                <p className="text-xs sm:text-sm text-gray-400 mb-3 sm:mb-4 leading-relaxed">
+                <p className="text-xs sm:text-sm text-gray-400 mb-4 sm:mb-6 leading-relaxed">
                   Professional {service.title.toLowerCase()} services tailored to meet your specific requirements and goals.
                 </p>
                 
-                <button className="flex items-center gap-2 text-xs sm:text-sm text-primary font-semibold group-hover:gap-3 transition-all">
-                  Learn More
+                <a href="#contact" className="w-full flex items-center justify-center gap-2 px-4 py-2.5 sm:py-3 bg-primary/10 hover:bg-primary text-primary hover:text-secondary border border-primary/30 hover:border-primary rounded-lg font-semibold transition-all duration-300 group-hover:scale-105">
+                  <span className="text-xs sm:text-sm">Buy Now</span>
                   <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4" />
-                </button>
+                </a>
               </div>
             ))}
           </div>
@@ -137,36 +130,7 @@ const Services = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6">
-        <div className="container mx-auto max-w-5xl">
-          <div className="bg-gradient-to-r from-primary/20 to-third/20 rounded-2xl sm:rounded-3xl p-8 sm:p-12 md:p-16 border border-primary/30 relative overflow-hidden">
-            {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-primary rounded-full blur-3xl"></div>
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-third rounded-full blur-3xl"></div>
-            </div>
-            
-            <div className="relative z-10 text-center space-y-4 sm:space-y-6">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
-                Ready to Start Your Project?
-              </h2>
-              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-300 max-w-2xl mx-auto">
-                Let's bring your vision to life with our expert team and cutting-edge solutions.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center pt-4">
-                <button className="px-6 sm:px-8 py-3 sm:py-4 bg-primary text-secondary rounded-lg sm:rounded-xl font-bold hover:bg-primary/90 transition-all duration-300 hover:scale-105 shadow-lg flex items-center justify-center gap-2">
-                  Get Free Consultation
-                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
-                </button>
-                <button className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-secondary rounded-lg sm:rounded-xl font-bold hover:bg-white/90 transition-all duration-300">
-                  View Our Work
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+
     </div>
   )
 }
